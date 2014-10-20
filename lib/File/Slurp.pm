@@ -1,6 +1,6 @@
 package File::Slurp;
 
-use 5.006002 ;
+use 5.6.2 ;
 
 use strict;
 use warnings ;
@@ -15,7 +15,7 @@ use Errno ;
 use vars qw( @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION ) ;
 @ISA = qw( Exporter ) ;
 
-$VERSION = '9999.20';
+$VERSION = '9999.19';
 
 my @std_export = qw(
 	read_file
@@ -33,16 +33,8 @@ my @edit_export = qw(
 my @ok_export = qw( 
 ) ;
 
-my @abbrev_export = qw(
-	rf
-	wf
-	ef
-	efl
-) ;
-
 @EXPORT_OK = (
 	@edit_export,
-	@abbrev_export,
 	qw(
 		slurp
 		prepend_file
@@ -50,10 +42,9 @@ my @abbrev_export = qw(
 ) ;
 
 %EXPORT_TAGS = (
-	'all'	=> [ @std_export, @edit_export, @abbrev_export, @EXPORT_OK ],
+	'all'	=> [ @std_export, @edit_export, @EXPORT_OK ],
 	'edit'	=> [ @edit_export ],
 	'std'	=> [ @std_export ],
-	'abr'	=> [ @abbrev_export ],
 ) ;
 
 @EXPORT = @std_export ;
@@ -112,7 +103,6 @@ BEGIN {
 
 
 *slurp = \&read_file ;
-*rf = \&read_file ;
 
 sub read_file {
 
@@ -372,8 +362,6 @@ ERR
 	return ;
 }
 
-
-*wf = \&write_file ;
 
 sub write_file {
 
@@ -643,8 +631,6 @@ sub prepend_file {
 
 # edit a file as a scalar in $_
 
-*ef = \&edit_file ;
-
 sub edit_file(&$;$) {
 
 	my( $edit_code, $file_name, $opts ) = @_ ;
@@ -697,8 +683,6 @@ sub edit_file(&$;$) {
 
 	return $write_result ;
 }
-
-*efl = \&edit_file_lines ;
 
 sub edit_file_lines(&$;$) {
 
@@ -989,7 +973,7 @@ an already open handle (like \*STDIN). It defaults to 1MB.
 
 You can use this option to control how read_file behaves when an error
 occurs. This option defaults to 'croak'. You can set it to 'carp' or to
-'quiet' to have no special error handling. This code wants to carp and
+'quiet to have no special error handling. This code wants to carp and
 then read another file if it fails.
 
 	my $text_ref = read_file( $file, err_mode => 'carp' ) ;
@@ -998,7 +982,7 @@ then read another file if it fails.
 		# read a different file but croak if not found
 		$text_ref = read_file( $another_file ) ;
 	}
-
+	
 	# process ${$text_ref}
 
 =head2 B<write_file>
